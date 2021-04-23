@@ -4,10 +4,22 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const crypto = require('crypto');
 
 const app = express();
 app.use(cors());
 app.use(express.static('docs'));
+
+const users = [
+    // This user is added to the array to avoid creating a new user on each restart
+    {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'johndoe@email.com',
+        // This is the SHA256 hash for value of `password`
+        password: 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=',
+    },
+];
 
 // create express app
 
@@ -37,6 +49,10 @@ app.use('/api/v1/cities', citiesRoutes);
 
 app.get('/home', (req, res) => {
     res.render('home');
+});
+
+app.get('/register', (req, res) => {
+    res.render('register');
 });
 
 app.set('port', process.env.PORT || 8000);
