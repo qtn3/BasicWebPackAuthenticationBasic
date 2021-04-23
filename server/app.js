@@ -35,7 +35,7 @@ const citiesRoutes = require('./routes/cities.routes');
 // using as middleware
 app.use('/api/v1/cities', citiesRoutes);
 
-app.get('/', (req, res) => {
+app.get('/home', (req, res) => {
     res.render('home');
 });
 
