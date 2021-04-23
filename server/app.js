@@ -35,6 +35,10 @@ const citiesRoutes = require('./routes/cities.routes');
 // using as middleware
 app.use('/api/v1/cities', citiesRoutes);
 
+app.get('/', (req, res) => {
+    res.render('home');
+});
+
 app.set('port', process.env.PORT || 8000);
 app.set('ip', process.env.NODEJS_IP || '127.0.0.1');
 
