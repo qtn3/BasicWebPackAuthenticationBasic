@@ -32,6 +32,10 @@ const generateAuthToken = () => {
     return crypto.randomBytes(30).toString('hex');
 };
 
+// create express app
+
+app.use(cookieParser());
+
 app.use((req, res, next) => {
     // Get auth token from the cookies
     const authToken = req.cookies['AuthToken'];
@@ -41,10 +45,6 @@ app.use((req, res, next) => {
 
     next();
 });
-
-// create express app
-
-app.use(cookieParser());
 
 app.engine('hbs', exphbs({
     extname: '.hbs',
@@ -161,5 +161,5 @@ app.set('ip', process.env.NODEJS_IP || '127.0.0.1');
 
 app.listen(app.get('port'), () => {
     console.log('%s: Node server started on %s ...', Date(Date.now()), app.get('port'));
-    open('http://localhost:8000');
+    open('http://localhost:8000/home');
 });
