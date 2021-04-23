@@ -145,6 +145,17 @@ app.post('/login', (req, res) => {
     }
 });
 
+app.get('/protected', (req, res) => {
+    if (req.user) {
+        res.render('protected');
+    } else {
+        res.render('login', {
+            message: 'Please login to continue',
+            messageClass: 'alert-danger',
+        });
+    }
+});
+
 app.set('port', process.env.PORT || 8000);
 app.set('ip', process.env.NODEJS_IP || '127.0.0.1');
 
