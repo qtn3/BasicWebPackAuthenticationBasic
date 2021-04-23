@@ -21,6 +21,12 @@ const users = [
     },
 ];
 
+const getHashedPassword = (password) => {
+    const sha256 = crypto.createHash('sha256');
+    const hash = sha256.update(password).digest('base64');
+    return hash;
+};
+
 // create express app
 
 app.use(cookieParser());
@@ -53,6 +59,48 @@ app.get('/home', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.render('register');
+});
+app.post('/register', (req, res) => {
+    const {
+        email, firstName, lastName, password, confirmPassword,
+    } = req.body;
+
+    // Check if the password and confirm password fields match
+    if (password === confirmPassword) {
+        // Check if user with the same email is also registered
+        if (users.find((user) => user.email === email)) {
+            res.render('register', {
+                message: 'User already registered.',
+                messageClass: 'alert-danger',
+            });
+
+            return;
+        }
+
+        const hashedPassword = getHashedPassword(password);
+
+        // Store user into the database if you are using one
+        users.push({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+        });
+
+        res.render('login', {
+            message: 'Registration Complete. Please login to continue.',
+            messageClass: 'alert-success',
+        });
+    } else {
+        res.render('register', {
+            message: 'Password does not match.',
+            messageClass: 'alert-danger',
+        });
+    }
+});
+
+app.get('/login', (req, res) => {
+    res.render('login');
 });
 
 app.set('port', process.env.PORT || 8000);
