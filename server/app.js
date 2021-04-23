@@ -10,6 +10,8 @@ const app = express();
 const authTokens = {};
 app.use(cors());
 app.use(express.static('docs'));
+app.set('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
 
 const users = [
     // This user is added to the array to avoid creating a new user on each restart
@@ -147,7 +149,7 @@ app.post('/login', (req, res) => {
 
 app.get('/protected', (req, res) => {
     if (req.user) {
-        res.render('protected');
+        res.render('C:\\Users\\qnguy\\Desktop\\BasicWebPackESLintProfessor\\BasicWebPackAuthenticationBasic\\src\\index.html');
     } else {
         res.render('login', {
             message: 'Please login to continue',
