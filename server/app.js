@@ -11,6 +11,13 @@ app.use(express.static('docs'));
 
 // create express app
 
+app.use(cookieParser());
+
+app.engine('hbs', exphbs({
+    extname: '.hbs',
+}));
+app.set('view engine', 'hbs');
+
 // Setup server port
 // const port = process.env.PORT || 5000;
 
