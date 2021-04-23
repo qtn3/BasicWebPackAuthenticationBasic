@@ -7,6 +7,7 @@ const cors = require('cors');
 const crypto = require('crypto');
 
 const app = express();
+const authTokens = {};
 app.use(cors());
 app.use(express.static('docs'));
 
@@ -26,6 +27,20 @@ const getHashedPassword = (password) => {
     const hash = sha256.update(password).digest('base64');
     return hash;
 };
+
+const generateAuthToken = () => {
+    return crypto.randomBytes(30).toString('hex');
+};
+
+app.use((req, res, next) => {
+    // Get auth token from the cookies
+    const authToken = req.cookies['AuthToken'];
+
+    // Inject the user to the request
+    req.user = authTokens[authToken];
+
+    next();
+});
 
 // create express app
 
@@ -101,6 +116,33 @@ app.post('/register', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.render('login');
+});
+
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    const hashedPassword = getHashedPassword(password);
+
+    const user = users.find((u) => {
+        return u.email === email && hashedPassword === u.password;
+    });
+
+    if (user) {
+        const authToken = generateAuthToken();
+
+        // Store authentication token
+        authTokens[authToken] = user;
+
+        // Setting the auth token in cookies
+        res.cookie('AuthToken', authToken);
+
+        // Redirect user to the protected page
+        res.redirect('/protected');
+    } else {
+        res.render('login', {
+            message: 'Invalid username or password',
+            messageClass: 'alert-danger',
+        });
+    }
 });
 
 app.set('port', process.env.PORT || 8000);
