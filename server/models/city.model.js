@@ -9,7 +9,7 @@ const City = (city) => {
     this.fldCapitalStatus = city.fldCapitalStatus;
     this.fldPopulation = city.fldPopulation;
 };
-City.create = function (newCity, result) {
+City.create = (newCity, result) => {
     dbConn.query('INSERT INTO tblCitiesImport set ?', newCity, (err, res) => {
         if (err) {
             console.log('error: ', err);
@@ -20,7 +20,7 @@ City.create = function (newCity, result) {
         }
     });
 };
-City.findById = function (id, result) {
+City.findById = (id, result) => {
     dbConn.query('Select * from tblCitiesImport where id = ? ', id, (err, res) => {
         if (err) {
             console.log('error: ', err);
@@ -30,7 +30,7 @@ City.findById = function (id, result) {
         }
     });
 };
-City.findAll = function (result) {
+City.findAll = (result) => {
     dbConn.query('Select * from tblCitiesImport', (err, res) => {
         if (err) {
             console.log('error: ', err);
